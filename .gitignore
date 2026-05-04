@@ -1,0 +1,5 @@
+node_modues
+dist
+build
+.DS_Store
+.env
