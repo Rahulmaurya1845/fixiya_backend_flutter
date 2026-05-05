@@ -1,5 +1,7 @@
-node_modues
-dist
-build
-.DS_Store
+node_modules/
+package-lock.json
 .env
+.env.local
+.env.*.local
+*.log
+.DS_Store
