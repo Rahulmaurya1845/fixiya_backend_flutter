@@ -55,17 +55,16 @@
 
 
 
-
 const nodemailer = require('nodemailer');
 
-// Create transporter with SendGrid
+// Use Gmail SMTP (more reliable than SendGrid on Render)
 const transporter = nodemailer.createTransport({
-    host: 'smtp.sendgrid.net',
+    host: 'smtp.gmail.com',
     port: 587,
     secure: false,
     auth: {
-        user: 'apikey',
-        pass: process.env.SENDGRID_API_KEY
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
     }
 });
 
@@ -78,12 +77,12 @@ transporter.verify((error, success) => {
     }
 });
 
-// Export sendEmail function (matching authController.js import)
+// Export sendEmail function
 exports.sendEmail = async (to, subject, text) => {
     console.log('📧 Sending email to:', to);
 
     const mailOptions = {
-        from: `"Fixiya" <rahulmaurya7279@gmail.com>`,
+        from: `"Fixiya" <${process.env.EMAIL_USER}>`,
         to,
         subject,
         text,
