@@ -54,36 +54,19 @@
 // };
 
 
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 
-// ✅ SendGrid SMTP
-const transporter = nodemailer.createTransport({
-    host: 'smtp.sendgrid.net',
-    port: 587,
-    secure: false,
-    auth: {
-        user: 'apikey',
-        pass: process.env.SENDGRID_API_KEY
-    }
-});
-
-// Verify connection
-transporter.verify((error, success) => {
-    if (error) {
-        console.error('❌ Email transporter error:', error.message);
-    } else {
-        console.log('✅ Email server is ready');
-    }
-});
+// Set API key
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.sendEmail = async (to, subject, text) => {
     console.log('📧 Sending email to:', to);
 
-    const mailOptions = {
-        from: '"Fixiya" <rahulmaurya7279@gmail.com>',
-        to,
-        subject,
-        text,
+    const msg = {
+        to: to,
+        from: 'rahulmaurya7279@gmail.com', // Your verified sender
+        subject: subject,
+        text: text,
         html: `<div style="font-family: Arial; padding: 20px; border: 1px solid #eee; border-radius: 10px; max-width: 500px; margin: 0 auto;">
             <h2 style="color: #0D7377; text-align: center;">Fixiya</h2>
             <hr style="border: 1px solid #0D7377;">
@@ -98,11 +81,11 @@ exports.sendEmail = async (to, subject, text) => {
     };
 
     try {
-        const info = await transporter.sendMail(mailOptions);
-        console.log('✅ Email sent:', info.messageId);
-        return info;
+        await sgMail.send(msg);
+        console.log('✅ Email sent successfully');
+        return { success: true };
     } catch (error) {
-        console.error('❌ Failed:', error.message);
-        throw new Error('Failed to send email: ' + error.message);
+        console.error('❌ Failed to send email:', error.response ? error.response.body : error.message);
+        throw new Error('Failed to send email: ' + (error.response ? error.response.body.errors[0].message : error.message));
     }
 };
