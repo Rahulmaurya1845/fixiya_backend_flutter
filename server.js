@@ -5,6 +5,7 @@
 // const morgan = require('morgan');
 // const compression = require('compression');
 // const helmet = require('helmet');
+// const keepAlive = require('./keepAlive'); // ✅ Added
 
 // // Load env vars
 // dotenv.config();
@@ -71,6 +72,12 @@
 // app.listen(PORT, () => {
 //   console.log(`🚀 Fixiya Server running on port ${PORT}`);
 //   console.log(`📱 API URL: http://localhost:${PORT}/api`);
+  
+//   // ✅ Keep Render awake (only in production)
+//   if (process.env.NODE_ENV === 'production') {
+//     keepAlive(`https://fixiya-backend-flutter-2.onrender.com`);
+//     console.log('🔄 Keep-alive enabled');
+//   }
 // });
 
 
@@ -82,7 +89,7 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const compression = require('compression');
 const helmet = require('helmet');
-const keepAlive = require('./keepAlive'); // ✅ Added
+const keepAlive = require('./keepAlive');
 
 // Load env vars
 dotenv.config();
@@ -148,11 +155,11 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Fixiya Server running on port ${PORT}`);
-  console.log(`📱 API URL: http://localhost:${PORT}/api`);
+  console.log(`📱 API URL: ${process.env.NODE_ENV === 'production' ? 'https://fixiya-backend-flutter-4.onrender.com' : 'http://localhost:' + PORT}/api`);
   
   // ✅ Keep Render awake (only in production)
   if (process.env.NODE_ENV === 'production') {
-    keepAlive(`https://fixiya-backend-flutter-2.onrender.com`);
+    keepAlive(`https://fixiya-backend-flutter-4.onrender.com`);
     console.log('🔄 Keep-alive enabled');
   }
 });

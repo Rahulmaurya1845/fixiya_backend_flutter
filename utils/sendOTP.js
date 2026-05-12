@@ -54,17 +54,19 @@
 // };
 
 
-
 const nodemailer = require('nodemailer');
 
-// Use Gmail SMTP (more reliable than SendGrid on Render)
+// ✅ Use environment variables for flexibility
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
+    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.EMAIL_PORT) || 587,
     secure: false,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
+    },
+    tls: {
+        rejectUnauthorized: false  // ✅ Helps with certificate issues
     }
 });
 

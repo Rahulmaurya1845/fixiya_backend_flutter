@@ -186,9 +186,9 @@ exports.sendOTP = async (req, res) => {
     // Send OTP email to user
     try {
       await sendEmail(email, 'Your Fixiya OTP Code', `Your OTP code is: ${otp}`);
-      console.log(`OTP sent to email: ${email}`);
+      console.log(`✅ OTP sent to email: ${email}`);
     } catch (emailError) {
-      console.error('Email sending failed:', emailError);
+      console.error('❌ Email sending failed:', emailError);
       return res.status(500).json({
         status: 'error',
         message: 'Failed to send OTP email. Please try again later.'
@@ -201,6 +201,7 @@ exports.sendOTP = async (req, res) => {
       data: { email }
     });
   } catch (error) {
+    console.error('❌ sendOTP error:', error);
     res.status(500).json({ status: 'error', message: error.message });
   }
 };
@@ -251,6 +252,7 @@ exports.verifyOTP = async (req, res) => {
       }
     });
   } catch (error) {
+    console.error('❌ verifyOTP error:', error);
     res.status(500).json({ status: 'error', message: error.message });
   }
 };
